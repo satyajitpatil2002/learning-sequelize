@@ -741,88 +741,248 @@
 
 
 
-const Sequelize = require('sequelize');
+// const Sequelize = require('sequelize');
+
+// // Connect to the database
+// const sequelize = new Sequelize('employeedb', 'root', '1234', {
+//   host: 'localhost',
+//   dialect: 'mysql'
+// });
+
+// // Define the Student model with a custom table name
+// const Student = sequelize.define('student', {
+//   name: {
+//     type: Sequelize.STRING,
+//     allowNull: false
+//   }
+// }, {
+//   tableName: 'studentAI' // Set the custom table name
+// });
+
+// // Define the Course model
+// const Course = sequelize.define('course', {
+//   name: {
+//     type: Sequelize.STRING,
+//     allowNull: false
+//   }
+// });
+
+// // Define the join table (StudentCourse)
+// const StudentCourse = sequelize.define('student_course', {
+//   // No need for any fields in the join table for a basic many-to-many relationship
+// });
+
+// // Define the associations (many-to-many)
+// Student.belongsToMany(Course, { through: StudentCourse });
+// Course.belongsToMany(Student, { through: StudentCourse });
+
+// // Synchronize the models with the database
+// sequelize.sync({ force: true, alter: true, logging: console.log })
+//   .then(() => {
+//     // Insert data into the studentAI table
+//     return Student.bulkCreate([
+//       { name: 'John' },
+//       { name: 'Jane' },
+//       { name: 'Bob' },
+//       { name: 'Alice' }
+//     ]);
+//   })
+//   .then(() => {
+//     // Insert data into the courses table
+//     return Course.bulkCreate([
+//       { name: 'Math' },
+//       { name: 'History' },
+//       { name: 'Physics' },
+//       { name: 'English' }
+//     ]);
+//   })
+//   .then(() => {
+//     // Associate students with courses
+//     return Promise.all([
+//       Student.findByPk(1).then(student => student.addCourses([1, 2])),
+//       Student.findByPk(2).then(student => student.addCourses([2, 3])),
+//       Student.findByPk(3).then(student => student.addCourses([3, 4])),
+//       Student.findByPk(4).then(student => student.addCourses([1, 4]))
+//     ]);
+//   })
+//   .then(() => {
+//     // Retrieve and display all students with associated courses
+//     return Student.findAll({
+//       include: [{ model: Course }]
+//     });
+//   })
+//   .then((studentsWithCourses) => {
+//     console.log('Students with Courses:');
+//     studentsWithCourses.forEach((student) => {
+//       console.log(`Student: ${student.name}`);
+//       const courses = student.courses;
+//       if (courses) {
+//         courses.forEach((course) => {
+//           console.log(`- Course: ${course.name}`);
+//         });
+//       }
+//     });
+//   })
+//   .catch((error) => {
+//     console.error('Error:', error.message)
+//   });
+
+/************************************************************************************************************************************ */
+
+
+
+
+//eager loading
+
+// const { Sequelize, DataTypes } = require('sequelize');
+
+// // Connect to the database
+// const sequelize = new Sequelize('employeedb', 'root', '1234', {
+//   host: 'localhost',
+//   dialect: 'mysql',
+// });
+
+// // Define the Pixel model
+// const Pixel = sequelize.define('Pixel', {
+//   x: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   },
+//   y: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   },
+// });
+
+// // Define the Color model
+// const Color = sequelize.define('Color', {
+//   name: {
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   },
+// });
+
+// // Define the association between Pixel and Color
+// Pixel.belongsTo(Color);
+
+// // Synchronize the models with the database
+// sequelize.sync({ force: true })
+//   .then(() => {
+//     // Insert data into the Color table
+//     return Color.bulkCreate([
+//       { name: 'Red' },
+//       { name: 'Green' },
+//       { name: 'Blue' },
+//       { name: 'Yellow' },
+//     ]);
+//   })
+//   .then(() => {
+//     // Insert random data into the Pixel table with associated Color
+//     return Pixel.bulkCreate([
+//       { x: 10, y: 20, ColorId: 1 },
+//       { x: 30, y: 40, ColorId: 2 },
+//       { x: 50, y: 60, ColorId: 3 },
+//       { x: 70, y: 80, ColorId: 4 },
+//     ]);
+//   })
+//   .then(() => {
+//     // Retrieve Pixels with associated Color using eager loading
+//     return Pixel.findAll({
+//       include: [{ model: Color }],
+//     });
+//   })
+//   .then((pixelsWithColor) => {
+//     console.log('Pixels with Color (Eager Loading):');
+//     pixelsWithColor.forEach((pixel) => {
+//       console.log(`Pixel at (${pixel.x}, ${pixel.y}) with Color: ${pixel.Color.name}`);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error('Error:', error.message);
+//   });
+
+
+
+/************************************************************************************************************************** */
+//lazy loading 
+
+const { Sequelize, DataTypes } = require('sequelize');
 
 // Connect to the database
 const sequelize = new Sequelize('employeedb', 'root', '1234', {
   host: 'localhost',
-  dialect: 'mysql'
+  dialect: 'mysql',
 });
 
-// Define the Student model with a custom table name
-const Student = sequelize.define('student', {
+// Define the Pixel model
+const Pixel = sequelize.define('Pixel', {
+  x: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  y: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+});
+
+// Define the Color model
+const Color = sequelize.define('Color', {
   name: {
-    type: Sequelize.STRING,
-    allowNull: false
-  }
-}, {
-  tableName: 'studentAI' // Set the custom table name
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
 
-// Define the Course model
-const Course = sequelize.define('course', {
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false
-  }
-});
-
-// Define the join table (StudentCourse)
-const StudentCourse = sequelize.define('student_course', {
-  // No need for any fields in the join table for a basic many-to-many relationship
-});
-
-// Define the associations (many-to-many)
-Student.belongsToMany(Course, { through: StudentCourse });
-Course.belongsToMany(Student, { through: StudentCourse });
+// Define the association between Pixel and Color
+Pixel.belongsTo(Color);
 
 // Synchronize the models with the database
-sequelize.sync({ force: true, alter: true, logging: console.log })
+sequelize.sync({ force: true })
   .then(() => {
-    // Insert data into the studentAI table
-    return Student.bulkCreate([
-      { name: 'John' },
-      { name: 'Jane' },
-      { name: 'Bob' },
-      { name: 'Alice' }
+    // Insert data into the Color table
+    return Color.bulkCreate([
+      { name: 'Red' },
+      { name: 'Green' },
+      { name: 'Blue' },
+      { name: 'Yellow' },
     ]);
   })
   .then(() => {
-    // Insert data into the courses table
-    return Course.bulkCreate([
-      { name: 'Math' },
-      { name: 'History' },
-      { name: 'Physics' },
-      { name: 'English' }
+    // Insert random data into the Pixel table with associated Color
+    return Pixel.bulkCreate([
+      { x: 10, y: 20, ColorId: 1 },
+      { x: 30, y: 40, ColorId: 2 },
+      { x: 50, y: 60, ColorId: 3 },
+      { x: 70, y: 80, ColorId: 4 },
     ]);
   })
   .then(() => {
-    // Associate students with courses
-    return Promise.all([
-      Student.findByPk(1).then(student => student.addCourses([1, 2])),
-      Student.findByPk(2).then(student => student.addCourses([2, 3])),
-      Student.findByPk(3).then(student => student.addCourses([3, 4])),
-      Student.findByPk(4).then(student => student.addCourses([1, 4]))
-    ]);
+    // Retrieve Pixels without eager loading
+    return Pixel.findAll({ include: [] });
   })
-  .then(() => {
-    // Retrieve and display all students with associated courses
-    return Student.findAll({
-      include: [{ model: Course }]
+  .then((pixels) => {
+    console.log('Pixels with Color (Lazy Loading):');
+    const result = pixels.map(async (pixel) => {
+      // Use lazy loading to retrieve associated Color
+      const color = await pixel.getColor();
+      return {
+        pixel: {
+          x: pixel.x,
+          y: pixel.y,
+        },
+        color: {
+          id: color.id,
+          name: color.name,
+        },
+      };
     });
+
+    return Promise.all(result);
   })
-  .then((studentsWithCourses) => {
-    console.log('Students with Courses:');
-    studentsWithCourses.forEach((student) => {
-      console.log(`Student: ${student.name}`);
-      const courses = student.courses;
-      if (courses) {
-        courses.forEach((course) => {
-          console.log(`- Course: ${course.name}`);
-        });
-      }
-    });
+  .then((jsonResult) => {
+    console.log(JSON.stringify(jsonResult, null, 2));
   })
   .catch((error) => {
-    console.error('Error:', error.message)
+    console.error('Error:', error.message);
   });
